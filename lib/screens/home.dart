@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/screens/tasklist.dart';
 import 'package:todo_list/screens/task.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   MyHomePage({
     super.key,
   });
 
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,8 +180,15 @@ class Tasks extends StatelessWidget {
   }
 }
 
-class Category extends StatelessWidget {
+class Category extends StatefulWidget {
+  @override
+  State<Category> createState() => _CategoryState();
+}
+
+class _CategoryState extends State<Category> {
   final tasklist = TodoTasks.tasklist();
+  final _todocontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -209,21 +221,52 @@ class Category extends StatelessWidget {
                         child: SingleChildScrollView(
                           child: Column(children: <Widget>[
                             for (TodoTasks taskss in tasklist)
-                              Taskitem(tasks: taskss),
+                              Taskitem(
+                                tasks: taskss,
+                                handle_change: handle_change,
+                                delete_item: delete_item,
+                              ),
                           ]),
                         )),
                     Padding(padding: EdgeInsets.all(10), child: Addtask())
                   ])))
     ]);
   }
+
+  void handle_change(TodoTasks tasks) {
+    if (tasks.isDone == true) {
+      setState(() {
+        tasks.isDone = false;
+      });
+    } else if (tasks.isDone == false) {
+      setState(() {
+        tasks.isDone = true;
+      });
+    }
+  }
+
+  void delete_item(String id) {
+    setState(() {
+      tasklist.removeWhere((item) => item.id == id);
+    });
+  }
 }
 
-class Addtask extends StatelessWidget {
+class Addtask extends StatefulWidget {
+  @override
+  State<Addtask> createState() => _AddtaskState();
+}
+
+class _AddtaskState extends State<Addtask> {
   TimeOfDay time = TimeOfDay(
     hour: 10,
     minute: 30,
   );
+
   DateTime date = DateTime(2023, 02, 12);
+  final tasklist = TodoTasks.tasklist();
+  final _todocontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -344,15 +387,16 @@ class Addtask extends StatelessWidget {
                                                       BorderRadius.circular(
                                                           10))),
                                           onPressed: () async {
-                                            // DateTime? newDate =
-                                            await showDatePicker(
-                                                builder: (BuildContext context,
-                                                    Widget? child) {
-                                                  return Theme(
-                                                    data: ThemeData(
-                                                      splashColor: Colors.black,
-                                                      colorScheme:
-                                                          ColorScheme.light(
+                                            DateTime? newDate =
+                                                await showDatePicker(
+                                                    builder:
+                                                        (BuildContext context,
+                                                            Widget? child) {
+                                                      return Theme(
+                                                        data: ThemeData(
+                                                          splashColor:
+                                                              Colors.black,
+                                                          colorScheme: ColorScheme.light(
                                                               primary: Color(
                                                                   0xFF052124),
                                                               primaryContainer:
@@ -369,16 +413,24 @@ class Addtask extends StatelessWidget {
                                                                   Colors.black,
                                                               secondary:
                                                                   Colors.black),
-                                                      dialogBackgroundColor:
-                                                          Colors.white,
-                                                    ),
-                                                    child: child ?? Text(""),
-                                                  );
-                                                },
-                                                context: context,
-                                                initialDate: date,
-                                                firstDate: DateTime(1990),
-                                                lastDate: DateTime(2100));
+                                                          dialogBackgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                        child:
+                                                            child ?? Text(""),
+                                                      );
+                                                    },
+                                                    context: context,
+                                                    initialDate: date,
+                                                    firstDate: DateTime(1990),
+                                                    lastDate: DateTime(2100));
+                                            if (newDate == null) {
+                                              return;
+                                            }
+
+                                            setState(() {
+                                              date = newDate;
+                                            });
                                           },
                                           child: Text(
                                             '${date.year}:${date.month}:${date.day}',
@@ -465,6 +517,10 @@ class Addtask extends StatelessWidget {
                                             if (newTime == null) {
                                               return;
                                             }
+
+                                            setState(() {
+                                              time = newTime;
+                                            });
                                           },
                                           child: Text(
                                             '${time.hour}:${time.minute}',
@@ -507,14 +563,15 @@ class Addtask extends StatelessWidget {
                                           color: Color.fromARGB(255, 3, 17, 19),
                                         ),
                                         child: TextField(
+                                            controller: _todocontroller,
                                             decoration: InputDecoration(
-                                          labelText: 'Name of task',
-                                          labelStyle: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 148, 149, 149),
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500),
-                                        ))),
+                                              labelText: 'Name of task',
+                                              labelStyle: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 148, 149, 149),
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
+                                            ))),
                                   ),
                                   Padding(
                                       padding: EdgeInsets.all(30),
@@ -547,31 +604,37 @@ class Addtask extends StatelessWidget {
                                         color: Color.fromARGB(255, 3, 17, 19),
                                       ),
                                       child: TextField(
+                                          controller: _todocontroller,
                                           decoration: InputDecoration(
-                                        labelText: 'Event,description,etc...',
-                                        labelStyle: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 148, 149, 149),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500),
-                                      ))),
+                                            labelText:
+                                                'Event,description,etc...',
+                                            labelStyle: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 148, 149, 149),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500),
+                                          ))),
                                   Padding(
                                       padding: EdgeInsets.all(16),
                                       child: Container(
-                                        height: 70,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
-                                            color:
-                                                Color.fromARGB(255, 14, 71, 79)
-                                                    .withOpacity(0.5)),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: Colors.greenAccent,
-                                          size: 50,
-                                        ),
-                                      ))
+                                          height: 70,
+                                          width: 70,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              color: Color.fromARGB(
+                                                      255, 14, 71, 79)
+                                                  .withOpacity(0.5)),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              //   addtodo_item(_todocontroller.text);
+                                            },
+                                            icon: Icon(
+                                              Icons.add,
+                                              color: Colors.greenAccent,
+                                              size: 50,
+                                            ),
+                                          )))
                                 ],
                               ),
                             );
@@ -581,6 +644,18 @@ class Addtask extends StatelessWidget {
             },
           )
         ]));
+  }
+
+  void addtodo_item(String date, String time, String desc, String name) {
+    setState(() {
+      tasklist.add(TodoTasks(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          date: date,
+          time: time,
+          description: desc,
+          name: name));
+    });
+    _todocontroller.clear();
   }
 }
 
