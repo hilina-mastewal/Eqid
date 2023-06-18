@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/screens/tasklist.dart';
+import 'package:todo_list/screens/task.dart';
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({
+  MyHomePage({
     super.key,
   });
 
@@ -12,8 +14,8 @@ class MyHomePage extends StatelessWidget {
             headerSliverBuilder: (context, innerBoxScroller) => [
                   SliverAppBar(
                       automaticallyImplyLeading: false,
-                      toolbarHeight: 165,
-                      backgroundColor: Color(0XFF12D7A7).withOpacity(0.4),
+                      toolbarHeight: 175,
+                      backgroundColor: Color(0XFF12D7A7).withOpacity(0.25),
                       elevation: 0,
                       title: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -29,10 +31,10 @@ class MyHomePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UpcomingTask(),
+                          //  UpcomingTask(),
                           Tasks(),
-                          SchoolProjects(),
-                          SchoolProjects()
+                          Category(),
+                          //SchoolProjects()
                         ])))),
         bottomNavigationBar: Footers());
   }
@@ -86,7 +88,7 @@ class ProfileName extends StatelessWidget {
                 'Hi Kidus!',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 45,
+                  fontSize: 40,
                   fontFamily: 'Futura',
                   color: Colors.black,
                 ),
@@ -94,7 +96,7 @@ class ProfileName extends StatelessWidget {
               Icon(
                 Icons.verified_outlined,
                 color: Color(0XFF343E87),
-                size: 40,
+                size: 35,
               ),
             ])),
         Padding(
@@ -104,7 +106,7 @@ class ProfileName extends StatelessWidget {
                 child: Text(
                   'Welcome back Here is a list of thing we have for today !',
                   style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 19,
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Futura',
                       color: Colors.black38),
@@ -141,11 +143,6 @@ class Date extends StatelessWidget {
 }
 
 class Tasks extends StatelessWidget {
-  TimeOfDay time = TimeOfDay(
-    hour: 10,
-    minute: 30,
-  );
-  DateTime date = DateTime(2023, 02, 12);
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -170,316 +167,338 @@ class Tasks extends StatelessWidget {
               )),
           Padding(
             padding: EdgeInsets.only(top: 10, right: 10),
-            child: TextButton(
-              child: Text("Add Category"),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                          insetPadding: EdgeInsets.only(
-                              top: 38, bottom: 38, right: 25, left: 25),
-                          contentPadding: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          content: Builder(
-                            builder: (context) {
-                              // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                              var height = MediaQuery.of(context).size.height;
-                              var width = MediaQuery.of(context).size.width;
+            child: Text("Add Category"),
+          )
+        ])
+      ],
+    );
+  }
+}
 
-                              return Container(
-                                height: height,
-                                width: width,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Color(0xFF052124)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: EdgeInsets.all(30),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.calendar_today,
-                                                  color: Color(0xFF12D7A7),
-                                                  size: 30,
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 7),
-                                                    child: Text(
-                                                      'Date',
-                                                      style: TextStyle(
-                                                        fontSize: 27,
-                                                        fontFamily: 'Futura',
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Color.fromARGB(
-                                                            255, 203, 204, 205),
-                                                      ),
-                                                    ))
-                                              ],
-                                            ),
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    Color(0xFF052124),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            MyHomePage()));
-                                              },
-                                              child: Icon(
-                                                Icons.close,
+class Category extends StatelessWidget {
+  final tasklist = TodoTasks.tasklist();
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+          padding: EdgeInsets.only(top: 16, bottom: 10, left: 25),
+          child: Text(
+            'School Project(3)',
+            style: TextStyle(
+              fontSize: 15,
+              fontFamily: 'Futura',
+              fontWeight: FontWeight.w900,
+              color: Colors.black,
+            ),
+          )),
+      Padding(
+          padding: EdgeInsets.all(4),
+          child: Container(
+              width: 400,
+              height: 170,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Color.fromARGB(255, 150, 152, 244).withOpacity(0.5),
+              ),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        width: 400,
+                        height: 100,
+                        child: SingleChildScrollView(
+                          child: Column(children: <Widget>[
+                            for (TodoTasks taskss in tasklist)
+                              Taskitem(tasks: taskss),
+                          ]),
+                        )),
+                    Padding(padding: EdgeInsets.all(10), child: Addtask())
+                  ])))
+    ]);
+  }
+}
+
+class Addtask extends StatelessWidget {
+  TimeOfDay time = TimeOfDay(
+    hour: 10,
+    minute: 30,
+  );
+  DateTime date = DateTime(2023, 02, 12);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 32,
+        width: 140,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), color: Colors.black),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: EdgeInsets.only(left: 15, top: 3),
+            child: Icon(
+              Icons.add,
+              color: Colors.greenAccent,
+              size: 25,
+            ),
+          ),
+          TextButton(
+            child: Text(
+              'AddTask',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Futura',
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        insetPadding: EdgeInsets.only(
+                            top: 38, bottom: 38, right: 25, left: 25),
+                        contentPadding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        content: Builder(
+                          builder: (context) {
+                            // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                            var height = MediaQuery.of(context).size.height;
+                            var width = MediaQuery.of(context).size.width;
+
+                            return Container(
+                              height: height,
+                              width: width,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color(0xFF052124)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                      padding: EdgeInsets.all(30),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.calendar_today,
                                                 color: Color(0xFF12D7A7),
-                                                size: 45,
+                                                size: 30,
                                               ),
-                                            )
-                                          ],
-                                        )),
-                                    Container(
-                                        height: 55,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromARGB(255, 3, 17, 19),
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 3, 17, 19),
-                                                shape: RoundedRectangleBorder(
-                                                    //to set border radius to button
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                            onPressed: () async {
-                                              DateTime? newDate =
-                                                  await showDatePicker(
-                                                      builder:
-                                                          (BuildContext context,
-                                                              Widget? child) {
-                                                        return Theme(
-                                                          data: ThemeData(
-                                                            splashColor:
-                                                                Colors.black,
-                                                            colorScheme: ColorScheme.light(
-                                                                primary: Color(
-                                                                    0xFF052124),
-                                                                primaryContainer:
-                                                                    Colors
-                                                                        .black,
-                                                                secondaryContainer:
-                                                                    Colors
-                                                                        .black,
-                                                                onSecondary: Colors
-                                                                    .greenAccent,
-                                                                onPrimary: Colors
-                                                                    .greenAccent,
-                                                                surface: Colors
-                                                                    .greenAccent,
-                                                                onSurface:
-                                                                    Colors
-                                                                        .black,
-                                                                secondary:
-                                                                    Colors
-                                                                        .black),
-                                                            dialogBackgroundColor:
-                                                                Colors.white,
-                                                          ),
-                                                          child:
-                                                              child ?? Text(""),
-                                                        );
-                                                      },
-                                                      context: context,
-                                                      initialDate: date,
-                                                      firstDate: DateTime(1990),
-                                                      lastDate: DateTime(2100));
-                                            },
-                                            child: Text(
-                                              '${date.year}:${date.month}:${date.day}',
-                                              style: TextStyle(
-                                                fontSize: 24,
-                                                color: Color(0xFF12D7A7),
-                                              ),
-                                            ))),
-                                    Padding(
-                                        padding: EdgeInsets.all(30),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.access_time,
-                                              color: Color(0xFF12D7A7),
-                                              size: 30,
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 7),
-                                                child: Text(
-                                                  'Time',
-                                                  style: TextStyle(
-                                                    fontSize: 27,
-                                                    fontFamily: 'Futura',
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Color.fromARGB(
-                                                        255, 203, 204, 205),
-                                                  ),
-                                                ))
-                                          ],
-                                        )),
-                                    Container(
-                                        height: 44,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromARGB(255, 3, 17, 19),
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 3, 17, 19),
-                                                shape: RoundedRectangleBorder(
-                                                    //to set border radius to button
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                            onPressed: () async {
-                                              TimeOfDay? newTime =
-                                                  await showTimePicker(
-                                                      builder:
-                                                          (BuildContext context,
-                                                              Widget? child) {
-                                                        return Theme(
-                                                          data: ThemeData(
-                                                            splashColor:
-                                                                Colors.black,
-                                                            colorScheme: ColorScheme.light(
-                                                                primary: Colors
-                                                                    .greenAccent,
-                                                                primaryContainer:
-                                                                    Colors
-                                                                        .black,
-                                                                secondaryContainer:
-                                                                    Colors
-                                                                        .black,
-                                                                onSecondary:
-                                                                    Colors
-                                                                        .white,
-                                                                onPrimary:
-                                                                    Colors
-                                                                        .white,
-                                                                surface: Colors
-                                                                    .white,
-                                                                onSurface:
-                                                                    Colors
-                                                                        .black,
-                                                                secondary:
-                                                                    Colors
-                                                                        .black),
-                                                            dialogBackgroundColor:
-                                                                Colors.white,
-                                                          ),
-                                                          child:
-                                                              child ?? Text(""),
-                                                        );
-                                                      },
-                                                      context: context,
-                                                      initialTime: time);
-                                              if (newTime == null) {
-                                                return;
-                                              }
-                                            },
-                                            child: Text(
-                                              '${time.hour}:${time.minute}',
-                                              style: TextStyle(
-                                                fontSize: 24,
-                                                color: Color(0xFF12D7A7),
-                                              ),
-                                            ))),
-                                    Padding(
-                                        padding: EdgeInsets.all(30),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.task_outlined,
-                                              color: Color(0xFF12D7A7),
-                                              size: 30,
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 7),
-                                                child: Text(
-                                                  'Task',
-                                                  style: TextStyle(
-                                                    fontSize: 27,
-                                                    fontFamily: 'Futura',
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Color.fromARGB(
-                                                        255, 203, 204, 205),
-                                                  ),
-                                                ))
-                                          ],
-                                        )),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Container(
-                                          width: 300,
-                                          height: 46,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color:
-                                                Color.fromARGB(255, 3, 17, 19),
+                                              Padding(
+                                                  padding:
+                                                      EdgeInsets.only(left: 7),
+                                                  child: Text(
+                                                    'Date',
+                                                    style: TextStyle(
+                                                      fontSize: 27,
+                                                      fontFamily: 'Futura',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Color.fromARGB(
+                                                          255, 203, 204, 205),
+                                                    ),
+                                                  ))
+                                            ],
                                           ),
-                                          child: TextField(
-                                              decoration: InputDecoration(
-                                            labelText: 'Name of task',
-                                            labelStyle: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 148, 149, 149),
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w500),
-                                          ))),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.all(30),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.more_horiz,
-                                              color: Color(0xFF12D7A7),
-                                              size: 30,
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Color(0xFF052124),
                                             ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 7),
-                                                child: Text(
-                                                  'Remark',
-                                                  style: TextStyle(
-                                                    fontSize: 27,
-                                                    fontFamily: 'Futura',
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Color.fromARGB(
-                                                        255, 203, 204, 205),
-                                                  ),
-                                                )),
-                                          ],
-                                        )),
-                                    Container(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MyHomePage()));
+                                            },
+                                            child: Icon(
+                                              Icons.close,
+                                              color: Color(0xFF12D7A7),
+                                              size: 45,
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                                  Container(
+                                      height: 55,
+                                      width: 300,
+                                      decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 3, 17, 19),
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 3, 17, 19),
+                                              shape: RoundedRectangleBorder(
+                                                  //to set border radius to button
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10))),
+                                          onPressed: () async {
+                                            // DateTime? newDate =
+                                            await showDatePicker(
+                                                builder: (BuildContext context,
+                                                    Widget? child) {
+                                                  return Theme(
+                                                    data: ThemeData(
+                                                      splashColor: Colors.black,
+                                                      colorScheme:
+                                                          ColorScheme.light(
+                                                              primary: Color(
+                                                                  0xFF052124),
+                                                              primaryContainer:
+                                                                  Colors.black,
+                                                              secondaryContainer:
+                                                                  Colors.black,
+                                                              onSecondary: Colors
+                                                                  .greenAccent,
+                                                              onPrimary: Colors
+                                                                  .greenAccent,
+                                                              surface: Colors
+                                                                  .greenAccent,
+                                                              onSurface:
+                                                                  Colors.black,
+                                                              secondary:
+                                                                  Colors.black),
+                                                      dialogBackgroundColor:
+                                                          Colors.white,
+                                                    ),
+                                                    child: child ?? Text(""),
+                                                  );
+                                                },
+                                                context: context,
+                                                initialDate: date,
+                                                firstDate: DateTime(1990),
+                                                lastDate: DateTime(2100));
+                                          },
+                                          child: Text(
+                                            '${date.year}:${date.month}:${date.day}',
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: Color(0xFF12D7A7),
+                                            ),
+                                          ))),
+                                  Padding(
+                                      padding: EdgeInsets.all(30),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.access_time,
+                                            color: Color(0xFF12D7A7),
+                                            size: 30,
+                                          ),
+                                          Padding(
+                                              padding: EdgeInsets.only(left: 7),
+                                              child: Text(
+                                                'Time',
+                                                style: TextStyle(
+                                                  fontSize: 27,
+                                                  fontFamily: 'Futura',
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color.fromARGB(
+                                                      255, 203, 204, 205),
+                                                ),
+                                              ))
+                                        ],
+                                      )),
+                                  Container(
+                                      height: 44,
+                                      width: 300,
+                                      decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 3, 17, 19),
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 3, 17, 19),
+                                              shape: RoundedRectangleBorder(
+                                                  //to set border radius to button
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10))),
+                                          onPressed: () async {
+                                            TimeOfDay? newTime =
+                                                await showTimePicker(
+                                                    builder:
+                                                        (BuildContext context,
+                                                            Widget? child) {
+                                                      return Theme(
+                                                        data: ThemeData(
+                                                          splashColor:
+                                                              Colors.black,
+                                                          colorScheme: ColorScheme.light(
+                                                              primary: Colors
+                                                                  .greenAccent,
+                                                              primaryContainer:
+                                                                  Colors.black,
+                                                              secondaryContainer:
+                                                                  Colors.black,
+                                                              onSecondary:
+                                                                  Colors.white,
+                                                              onPrimary:
+                                                                  Colors.white,
+                                                              surface:
+                                                                  Colors.white,
+                                                              onSurface:
+                                                                  Colors.black,
+                                                              secondary:
+                                                                  Colors.black),
+                                                          dialogBackgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                        child:
+                                                            child ?? Text(""),
+                                                      );
+                                                    },
+                                                    context: context,
+                                                    initialTime: time);
+                                            if (newTime == null) {
+                                              return;
+                                            }
+                                          },
+                                          child: Text(
+                                            '${time.hour}:${time.minute}',
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: Color(0xFF12D7A7),
+                                            ),
+                                          ))),
+                                  Padding(
+                                      padding: EdgeInsets.all(30),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.task_outlined,
+                                            color: Color(0xFF12D7A7),
+                                            size: 30,
+                                          ),
+                                          Padding(
+                                              padding: EdgeInsets.only(left: 7),
+                                              child: Text(
+                                                'Task',
+                                                style: TextStyle(
+                                                  fontSize: 27,
+                                                  fontFamily: 'Futura',
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color.fromARGB(
+                                                      255, 203, 204, 205),
+                                                ),
+                                              ))
+                                        ],
+                                      )),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Container(
                                         width: 300,
                                         height: 46,
                                         decoration: BoxDecoration(
@@ -489,216 +508,79 @@ class Tasks extends StatelessWidget {
                                         ),
                                         child: TextField(
                                             decoration: InputDecoration(
-                                          labelText: 'Event,description,etc...',
+                                          labelText: 'Name of task',
                                           labelStyle: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 148, 149, 149),
                                               fontSize: 20,
                                               fontWeight: FontWeight.w500),
                                         ))),
-                                    Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Container(
-                                          height: 70,
-                                          width: 70,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              color: Color.fromARGB(
-                                                      255, 14, 71, 79)
-                                                  .withOpacity(0.5)),
-                                          child: Icon(
-                                            Icons.add,
-                                            color: Colors.greenAccent,
-                                            size: 50,
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.all(30),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.more_horiz,
+                                            color: Color(0xFF12D7A7),
+                                            size: 30,
                                           ),
-                                        ))
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ));
-              },
-            ),
-          )
-        ])
-      ],
-    );
-  }
-}
-
-class SchoolProjects extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-            padding: EdgeInsets.only(top: 16, bottom: 10, left: 25),
-            child: Text('School Project(3)',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Futura',
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black))),
-        Padding(
-            padding: EdgeInsets.all(4),
-            child: Container(
-                height: 150,
-                width: 400,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(255, 244, 177, 150).withOpacity(0.5),
-                ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 40, top: 10),
-                                  child: Icon(
-                                    Icons.check_box_rounded,
-                                    color: Color.fromARGB(255, 66, 109, 235),
-                                    size: 20,
-                                  ),
-                                ),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                          padding:
-                                              EdgeInsets.only(left: 5, top: 13),
-                                          child: Text(
-                                            'UI/UX Design Assignmnet',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Futura',
-                                              color: Colors.black,
-                                            ),
-                                          )),
-                                      Padding(
-                                          padding:
-                                              EdgeInsets.only(left: 5, top: 5),
-                                          child: Text(
-                                            '10:30PM Zoom Meeting',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Futura',
-                                              color: Colors.black45,
-                                            ),
-                                          ))
-                                    ]),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 10, top: 10),
-                              child: Icon(
-                                Icons.more_vert,
-                                color: Color.fromARGB(255, 41, 41, 41),
-                                size: 20,
-                              ),
-                            ),
-                          ]),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 40, top: 10),
-                                  child: Icon(
-                                    Icons.check_box_rounded,
-                                    color: Color.fromARGB(255, 66, 109, 235),
-                                    size: 20,
-                                  ),
-                                ),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                          padding:
-                                              EdgeInsets.only(left: 5, top: 13),
-                                          child: Text(
-                                            'UI/UX Design Assignmnet',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Futura',
-                                              color: Colors.black,
-                                            ),
-                                          )),
-                                      Padding(
-                                          padding:
-                                              EdgeInsets.only(left: 5, top: 5),
-                                          child: Text(
-                                            '10:30PM Zoom Meeting',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Futura',
-                                              color: Colors.black45,
-                                            ),
-                                          ))
-                                    ]),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: 10, top: 10, bottom: 30),
-                              child: Icon(
-                                Icons.more_vert,
-                                color: Color.fromARGB(255, 69, 69, 69),
-                                size: 20,
-                              ),
-                            ),
-                          ]),
-                      Container(
-                          height: 32,
-                          width: 140,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.black),
-                          child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 15, top: 3),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.greenAccent,
-                                    size: 25,
-                                  ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 10, top: 7),
-                                    child: Text(
-                                      'AddTask',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Futura',
-                                        color: Colors.white,
+                                          Padding(
+                                              padding: EdgeInsets.only(left: 7),
+                                              child: Text(
+                                                'Remark',
+                                                style: TextStyle(
+                                                  fontSize: 27,
+                                                  fontFamily: 'Futura',
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color.fromARGB(
+                                                      255, 203, 204, 205),
+                                                ),
+                                              )),
+                                        ],
+                                      )),
+                                  Container(
+                                      width: 300,
+                                      height: 46,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Color.fromARGB(255, 3, 17, 19),
                                       ),
-                                    )),
-                              ]))
-                    ])))
-      ],
-    );
+                                      child: TextField(
+                                          decoration: InputDecoration(
+                                        labelText: 'Event,description,etc...',
+                                        labelStyle: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 148, 149, 149),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ))),
+                                  Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Container(
+                                        height: 70,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            color:
+                                                Color.fromARGB(255, 14, 71, 79)
+                                                    .withOpacity(0.5)),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.greenAccent,
+                                          size: 50,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ));
+            },
+          )
+        ]));
   }
 }
 
