@@ -1,256 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/screens/tasklist.dart';
-import 'package:todo_list/screens/task.dart';
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({
-    super.key,
-  });
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxScroller) => [
-                  SliverAppBar(
-                      automaticallyImplyLeading: false,
-                      toolbarHeight: 175,
-                      backgroundColor: Color(0XFF12D7A7).withOpacity(0.25),
-                      elevation: 0,
-                      title: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [Date(), Profile()]))
-                ],
-            body: SingleChildScrollView(
-                child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //  UpcomingTask(),
-                          Tasks(),
-                          Category(),
-                          //SchoolProjects()
-                        ])))),
-        bottomNavigationBar: Footers());
-  }
-}
-
-String getCurrentDate() {
-  var date = DateTime.now().toString();
-
-  var dateParse = DateTime.parse(date);
-
-  var formattedDate = "${dateParse.day}-${dateParse.month}-${dateParse.year}";
-  return formattedDate.toString();
-}
-
-class Profile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: Container(
-            height: 70,
-            width: 70,
-            decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage("images/images.jpg"),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(30)),
-          ),
-        ),
-        ProfileName()
-      ],
-    );
-  }
-}
-
-class ProfileName extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-            padding: EdgeInsets.only(top: 15),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                'Hi Kidus!',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  fontFamily: 'Futura',
-                  color: Colors.black,
-                ),
-              ),
-              Icon(
-                Icons.verified_outlined,
-                color: Color(0XFF343E87),
-                size: 35,
-              ),
-            ])),
-        Padding(
-            padding: EdgeInsets.only(),
-            child: SizedBox(
-                width: 190,
-                child: Text(
-                  'Welcome back Here is a list of thing we have for today !',
-                  style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Futura',
-                      color: Colors.black38),
-                  maxLines: 3,
-                ))),
-      ],
-    );
-  }
-}
-
-class Date extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          Icons.calendar_today,
-          color: Color.fromARGB(255, 41, 41, 41),
-          size: 25,
-        ),
-        Text(
-          getCurrentDate(),
-          style: TextStyle(
-            fontSize: 15,
-            fontFamily: 'Futura',
-            color: Colors.black45,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class Tasks extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-            padding: EdgeInsets.only(top: 10, left: 16),
-            child: Text('Tasks',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Futura',
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black))),
-        Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Padding(
-              padding: EdgeInsets.only(top: 10, left: 16),
-              child: Icon(
-                Icons.add,
-                color: Colors.greenAccent,
-                size: 20,
-              )),
-          Padding(
-            padding: EdgeInsets.only(top: 10, right: 10),
-            child: Text("Add Category"),
-          )
-        ])
-      ],
-    );
-  }
-}
-
-class Category extends StatefulWidget {
-  @override
-  State<Category> createState() => _CategoryState();
-}
-
-class _CategoryState extends State<Category> {
-  final tasklist = TodoTasks.tasklist();
-  final _todocontroller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Padding(
-          padding: EdgeInsets.only(top: 16, bottom: 10, left: 25),
-          child: Text(
-            'School Project(3)',
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: 'Futura',
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-            ),
-          )),
-      Padding(
-          padding: EdgeInsets.all(4),
-          child: Container(
-              width: 400,
-              height: 170,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Color.fromARGB(255, 150, 152, 244).withOpacity(0.5),
-              ),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                        width: 400,
-                        height: 100,
-                        child: SingleChildScrollView(
-                          child: Column(children: <Widget>[
-                            for (TodoTasks taskss in tasklist)
-                              Taskitem(
-                                tasks: taskss,
-                                handle_change: handle_change,
-                                delete_item: delete_item,
-                              ),
-                          ]),
-                        )),
-                    Padding(padding: EdgeInsets.all(10), child: Addtask())
-                  ])))
-    ]);
-  }
-
-  void handle_change(TodoTasks tasks) {
-    if (tasks.isDone == true) {
-      setState(() {
-        tasks.isDone = false;
-      });
-    } else if (tasks.isDone == false) {
-      setState(() {
-        tasks.isDone = true;
-      });
-    }
-  }
-
-  void delete_item(String id) {
-    setState(() {
-      tasklist.removeWhere((item) => item.id == id);
-    });
-  }
-}
+import 'package:todo_list/screens/Home/task.dart';
+import 'package:todo_list/screens/Home/home.dart';
 
 class Addtask extends StatefulWidget {
   @override
@@ -265,7 +15,10 @@ class _AddtaskState extends State<Addtask> {
 
   DateTime date = DateTime(2023, 02, 12);
   final tasklist = TodoTasks.tasklist();
-  final _todocontroller = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _taskController = TextEditingController();
+  final TextEditingController _remarkController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -338,7 +91,7 @@ class _AddtaskState extends State<Addtask> {
                                                   padding:
                                                       EdgeInsets.only(left: 7),
                                                   child: Text(
-                                                    'Date',
+                                                    '${date.year}:${date.month}:${date.day}',
                                                     style: TextStyle(
                                                       fontSize: 27,
                                                       fontFamily: 'Futura',
@@ -386,6 +139,13 @@ class _AddtaskState extends State<Addtask> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10))),
+                                          child: Text(
+                                            '${date.year}:${date.month}:${date.day}',
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: Color(0xFF12D7A7),
+                                            ),
+                                          ),
                                           onPressed: () async {
                                             DateTime? newDate =
                                                 await showDatePicker(
@@ -416,29 +176,23 @@ class _AddtaskState extends State<Addtask> {
                                                           dialogBackgroundColor:
                                                               Colors.white,
                                                         ),
-                                                        child:
-                                                            child ?? Text(""),
+                                                        child: child ??
+                                                            Text(
+                                                                '${date.year}:${date.month}:${date.day}'),
                                                       );
                                                     },
                                                     context: context,
                                                     initialDate: date,
                                                     firstDate: DateTime(1990),
                                                     lastDate: DateTime(2100));
-                                            if (newDate == null) {
-                                              return;
+                                            if (newDate != null) {
+                                              setState(() {
+                                                date = newDate;
+                                                _dateController.text =
+                                                    newDate.toString();
+                                              });
                                             }
-
-                                            setState(() {
-                                              date = newDate;
-                                            });
-                                          },
-                                          child: Text(
-                                            '${date.year}:${date.month}:${date.day}',
-                                            style: TextStyle(
-                                              fontSize: 24,
-                                              color: Color(0xFF12D7A7),
-                                            ),
-                                          ))),
+                                          })),
                                   Padding(
                                       padding: EdgeInsets.all(30),
                                       child: Row(
@@ -508,19 +262,19 @@ class _AddtaskState extends State<Addtask> {
                                                           dialogBackgroundColor:
                                                               Colors.white,
                                                         ),
-                                                        child:
-                                                            child ?? Text(""),
+                                                        child: child ??
+                                                            Text(
+                                                                '${time.hour}:${time.minute}'),
                                                       );
                                                     },
                                                     context: context,
                                                     initialTime: time);
-                                            if (newTime == null) {
-                                              return;
+                                            if (newTime != null) {
+                                              setState(() {
+                                                _timeController.text =
+                                                    newTime.format(context);
+                                              });
                                             }
-
-                                            setState(() {
-                                              time = newTime;
-                                            });
                                           },
                                           child: Text(
                                             '${time.hour}:${time.minute}',
@@ -563,7 +317,7 @@ class _AddtaskState extends State<Addtask> {
                                           color: Color.fromARGB(255, 3, 17, 19),
                                         ),
                                         child: TextField(
-                                            controller: _todocontroller,
+                                            controller: _taskController,
                                             decoration: InputDecoration(
                                               labelText: 'Name of task',
                                               labelStyle: TextStyle(
@@ -604,7 +358,7 @@ class _AddtaskState extends State<Addtask> {
                                         color: Color.fromARGB(255, 3, 17, 19),
                                       ),
                                       child: TextField(
-                                          controller: _todocontroller,
+                                          controller: _remarkController,
                                           decoration: InputDecoration(
                                             labelText:
                                                 'Event,description,etc...',
@@ -627,7 +381,11 @@ class _AddtaskState extends State<Addtask> {
                                                   .withOpacity(0.5)),
                                           child: IconButton(
                                             onPressed: () {
-                                              //   addtodo_item(_todocontroller.text);
+                                              addtodoItem(
+                                                  _dateController.text,
+                                                  _timeController.text,
+                                                  _remarkController.text,
+                                                  _taskController.text);
                                             },
                                             icon: Icon(
                                               Icons.add,
@@ -646,7 +404,7 @@ class _AddtaskState extends State<Addtask> {
         ]));
   }
 
-  void addtodo_item(String date, String time, String desc, String name) {
+  void addtodoItem(String date, String time, String desc, String name) {
     setState(() {
       tasklist.add(TodoTasks(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -654,269 +412,10 @@ class _AddtaskState extends State<Addtask> {
           time: time,
           description: desc,
           name: name));
+      _taskController.clear();
+      _dateController.clear();
+      _remarkController.clear();
+      _timeController.clear();
     });
-    _todocontroller.clear();
-  }
-}
-
-class Footers extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 40,
-        decoration: BoxDecoration(color: Color.fromARGB(255, 223, 223, 223)),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 3),
-                child: Icon(
-                  Icons.file_copy_outlined,
-                  color: Colors.black,
-                  size: 25,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 3),
-                child: Icon(
-                  Icons.people,
-                  color: Colors.black,
-                  size: 25,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 3),
-                child: Icon(
-                  Icons.person_3_rounded,
-                  color: Colors.black,
-                  size: 25,
-                ),
-              ),
-            ]));
-  }
-}
-
-class UpcomingTask extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-                padding: EdgeInsets.only(top: 35, left: 16),
-                child: Text('Upcoming Tasks',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: 'Futura',
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black))),
-            Padding(
-              padding: EdgeInsets.only(top: 35, right: 10),
-              child: Text(
-                'View all',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Futura',
-                  color: Color(0XFF343E87),
-                ),
-              ),
-            ),
-          ]),
-      SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Expanded(
-              child: Row(children: [
-            Padding(
-                padding: EdgeInsets.all(16),
-                child: Container(
-                    height: 130,
-                    width: 190,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color:
-                          Color.fromARGB(255, 129, 234, 129).withOpacity(0.5),
-                    ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 15),
-                            child: Text(
-                              'Personal project',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Futura',
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Row(children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, left: 10),
-                              child: Icon(
-                                Icons.circle,
-                                color: Color.fromARGB(255, 60, 210, 73),
-                                size: 9,
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 10, left: 10),
-                                child: SizedBox(
-                                    width: 160,
-                                    child: Text(
-                                      'Deploy my Portfolio website',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Futura',
-                                          color: Colors.black),
-                                      maxLines: 3,
-                                    ))),
-                          ]),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              '3 hours left',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Futura',
-                                color: Color.fromARGB(255, 164, 164, 164),
-                              ),
-                            ),
-                          ),
-                        ]))),
-            Padding(
-                padding: EdgeInsets.all(16),
-                child: Container(
-                    height: 130,
-                    width: 190,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color:
-                          Color.fromARGB(255, 129, 171, 234).withOpacity(0.5),
-                    ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 15),
-                            child: Text(
-                              'Personal project',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Futura',
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Row(children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, left: 10),
-                              child: Icon(
-                                Icons.circle,
-                                color: Color.fromARGB(255, 60, 120, 210),
-                                size: 9,
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 10, left: 10),
-                                child: SizedBox(
-                                    width: 160,
-                                    child: Text(
-                                      'Deploy my Portfolio website',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Futura',
-                                          color: Colors.black),
-                                      maxLines: 3,
-                                    ))),
-                          ]),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              '3 hours left',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Futura',
-                                color: Color.fromARGB(255, 164, 164, 164),
-                              ),
-                            ),
-                          ),
-                        ]))),
-            Padding(
-                padding: EdgeInsets.all(16),
-                child: Container(
-                    height: 130,
-                    width: 190,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color:
-                          Color.fromARGB(255, 231, 129, 234).withOpacity(0.5),
-                    ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 15),
-                            child: Text(
-                              'Personal project',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Futura',
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Row(children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, left: 10),
-                              child: Icon(
-                                Icons.circle,
-                                color: Color.fromARGB(255, 203, 60, 210),
-                                size: 9,
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 10, left: 10),
-                                child: SizedBox(
-                                    width: 160,
-                                    child: Text(
-                                      'Deploy my Portfolio website',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Futura',
-                                          color: Colors.black),
-                                      maxLines: 3,
-                                    ))),
-                          ]),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              '3 hours left',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Futura',
-                                color: Color.fromARGB(255, 164, 164, 164),
-                              ),
-                            ),
-                          ),
-                        ])))
-          ])))
-    ]);
   }
 }
