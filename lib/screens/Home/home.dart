@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/screens/Home/tasklist.dart';
 import 'package:todo_list/screens/Home/task.dart';
 import 'package:todo_list/screens/Home/addtask.dart';
+import 'package:todo_list/screens/Home/profiles.dart';
+import 'package:todo_list/screens/Home/Footer.dart';
 import 'package:todo_list/screens/Home/upcomingtasks.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -46,74 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Profile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: Container(
-            height: 70,
-            width: 70,
-            decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage("images/images.jpg"),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(30)),
-          ),
-        ),
-        ProfileName()
-      ],
-    );
-  }
-}
-
-class ProfileName extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-            padding: EdgeInsets.only(top: 15),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                'Hi Kidus!',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  fontFamily: 'Futura',
-                  color: Colors.black,
-                ),
-              ),
-              Icon(
-                Icons.verified_outlined,
-                color: Color(0XFF343E87),
-                size: 35,
-              ),
-            ])),
-        Padding(
-            padding: EdgeInsets.only(),
-            child: SizedBox(
-                width: 190,
-                child: Text(
-                  'Welcome back Here is a list of thing we have for today !',
-                  style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Futura',
-                      color: Colors.black38),
-                  maxLines: 3,
-                ))),
-      ],
-    );
-  }
-}
-
 // ignore: must_be_immutable
 class Date extends StatelessWidget {
   DateTime date = DateTime.now();
@@ -141,7 +75,61 @@ class Date extends StatelessWidget {
   }
 }
 
-class Tasks extends StatelessWidget {
+class Tasks extends StatefulWidget {
+  @override
+  State<Tasks> createState() => _TasksState();
+}
+
+class _TasksState extends State<Tasks> {
+  List<String> nameList = [];
+  String name = '';
+
+  void showNameDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 14, 23, 41),
+          title: Text(
+            'Category Name',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
+          content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  name = value;
+                });
+              },
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.greenAccent),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  filled: true,
+                  fillColor: Color.fromARGB(255, 14, 23, 41),
+                  hintText: 'Enter  Category',
+                  hintStyle: TextStyle(color: Colors.greenAccent))),
+          actions: [
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Category();
+                setState(() {
+                  nameList.add(name);
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -167,6 +155,7 @@ class Tasks extends StatelessWidget {
           Padding(
               padding: EdgeInsets.only(top: 10, right: 10),
               child: TextButton(
+                onPressed: showNameDialog,
                 child: Text(
                   'Add Category',
                   style: TextStyle(
@@ -176,23 +165,10 @@ class Tasks extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                onPressed: () {},
               ))
         ])
       ],
     );
-  }
-}
-
-class Addcategory extends StatefulWidget {
-  @override
-  State<Addcategory> createState() => _AddcategoryState();
-}
-
-class _AddcategoryState extends State<Addcategory> {
-  @override
-  Widget build(BuildContext context) {
-    return (Container());
   }
 }
 
@@ -203,6 +179,7 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category> {
   final tasklist = TodoTasks.tasklist();
+  String name = _TasksState().name;
   //final _todocontroller = TextEditingController();
 
   @override
@@ -211,7 +188,7 @@ class _CategoryState extends State<Category> {
       Padding(
           padding: EdgeInsets.only(top: 16, bottom: 10, left: 25),
           child: Text(
-            'School Project(3)',
+            name,
             style: TextStyle(
               fontSize: 15,
               fontFamily: 'Futura',
@@ -265,43 +242,5 @@ class _CategoryState extends State<Category> {
     setState(() {
       tasklist.removeWhere((item) => item.id == id);
     });
-  }
-}
-
-class Footers extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 40,
-        decoration: BoxDecoration(color: Color.fromARGB(255, 223, 223, 223)),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 3),
-                child: Icon(
-                  Icons.file_copy_outlined,
-                  color: Colors.black,
-                  size: 25,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 3),
-                child: Icon(
-                  Icons.people,
-                  color: Colors.black,
-                  size: 25,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 3),
-                child: Icon(
-                  Icons.person_3_rounded,
-                  color: Colors.black,
-                  size: 25,
-                ),
-              ),
-            ]));
   }
 }
